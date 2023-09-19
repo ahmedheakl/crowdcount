@@ -5,6 +5,7 @@ final_models
 saved_models
 *_epochs.py
 *~
+venv
 
 
 # Byte-compiled / optimized / DLL files
