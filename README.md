@@ -1,5 +1,7 @@
 # CrowdCounting Made Easy 🤓 with  CNN-based Cascaded Multi-task
+[![PyPI version](https://badge.fury.io/py/ezcrowdcount.svg)](https://badge.fury.io/py/ezcrowdcount)
 [![codestyle](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 This is a packaging implementation of the paper [CNN-based Cascaded Multi-task Learning of High-level Prior and Density Estimation for Crowd Counting](https://arxiv.org/pdf/1707.09605.pdf) for single image crowd counting which is accepted at [AVSS 2017](http://www.avss2017.org/)
 
 The package is compatible with all operating systems, provides a staggering fast and accurate prediction. It achieves a min of 20 fps on a 6 core intel cpu.
