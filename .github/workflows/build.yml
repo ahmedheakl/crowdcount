@@ -2,8 +2,7 @@ name: build
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches: [ master ]
 
 permissions:
   contents: read
