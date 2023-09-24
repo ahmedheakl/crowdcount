@@ -1,7 +1,8 @@
 """CMTL model implementation"""
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-
+# pylint: disable=too-many-instance-attributes
+from typing import Tuple
 
 import torch
 from torch import nn
@@ -65,7 +66,7 @@ class CMTL(nn.Module):
             Conv2d(8, 1, 1, same_padding=True, NL="relu", bn=bn),
         )
 
-    def forward(self, im_data):
+    def forward(self, im_data: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         """Forward pass of Crowd Counting Network"""
         x_base = self.base_layer(im_data)
         x_hlp1 = self.hl_prior_1(x_base)

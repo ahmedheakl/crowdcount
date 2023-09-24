@@ -1,4 +1,5 @@
 """Crowd Counting Network"""
+# pylint: disable=unused-argument,invalid-name,too-many-arguments
 import torch
 from torch import nn
 
@@ -21,9 +22,7 @@ class CrowdCounter(nn.Module):
 
     def forward(self, im_data, gt_data=None, gt_cls_label=None, ce_weights=None):
         """Forward pass of Crowd Counting Network"""
-        im_data = network.np_to_variable(
-            im_data, is_cuda=False, is_training=self.training
-        )
+        im_data = network.np_to_variable(im_data, is_cuda=False)
         density_map, _ = self.CCN(im_data)
 
         return density_map

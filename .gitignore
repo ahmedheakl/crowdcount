@@ -1,10 +1,4 @@
 *.pyc
-output
-data
-final_models
-saved_models
-*_epochs.py
-*~
 venv
 
 
@@ -38,7 +32,6 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -83,3 +76,4 @@ test.py
 *.weights
 *.cfg
 *.ipynb
+.mp4

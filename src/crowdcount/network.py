@@ -1,9 +1,14 @@
+"""Network implementation"""
+# pylint: disable=invalid-name,too-many-arguments
 import torch
 from torch import nn
 import numpy as np
+import h5py
 
 
 class Conv2d(nn.Module):
+    """Implementation for 2D Convolution"""
+
     def __init__(
         self,
         in_channels,
@@ -14,7 +19,7 @@ class Conv2d(nn.Module):
         same_padding=False,
         bn=False,
     ):
-        super(Conv2d, self).__init__()
+        super().__init__()
         padding = int((kernel_size - 1) / 2) if same_padding else 0
         self.conv = nn.Conv2d(
             in_channels, out_channels, kernel_size, stride, padding=padding
@@ -32,6 +37,7 @@ class Conv2d(nn.Module):
             self.relu = None
 
     def forward(self, x):
+        """Forward pass through the model network"""
         x = self.conv(x)
         if self.bn is not None:
             x = self.bn(x)
@@ -41,8 +47,10 @@ class Conv2d(nn.Module):
 
 
 class FC(nn.Module):
+    """Fully connect implementation"""
+
     def __init__(self, in_features, out_features, NL="relu"):
-        super(FC, self).__init__()
+        super().__init__()
         self.fc = nn.Linear(in_features, out_features)
         if NL == "relu":
             self.relu = nn.ReLU(inplace=True)
@@ -51,53 +59,26 @@ class FC(nn.Module):
         else:
             self.relu = None
 
-    def forward(self, x):
-        x = self.fc(x)
+    def forward(self, input_tensor: torch.Tensor) -> torch.Tensor:
+        """Foward pass through the FC Model"""
+        input_tensor = self.fc(input_tensor)
         if self.relu is not None:
-            x = self.relu(x)
-        return x
-
-
-def save_net(fname, net):
-    import h5py
-
-    h5f = h5py.File(fname, mode="w")
-    for k, v in net.state_dict().items():
-        h5f.create_dataset(k, data=v.cpu().numpy())
+            input_tensor = self.relu(input_tensor)
+        return input_tensor
 
 
 def load_net(fname, net):
-    import h5py
-
+    """Load network weights"""
     h5f = h5py.File(fname, mode="r")
-    for k, v in net.state_dict().items():
-        param = torch.from_numpy(np.asarray(h5f[k]))
-        v.copy_(param)
+    for key, value in net.state_dict().items():
+        param = torch.from_numpy(np.asarray(h5f[key]))
+        value.copy_(param)
 
 
-def np_to_variable(x, is_cuda=False, is_training=False, dtype=torch.FloatTensor):
+def np_to_variable(data: np.ndarray, is_cuda=False):
+    """Convert a numpy variable to a tensor"""
     with torch.no_grad():
-        v = torch.tensor(x, dtype=torch.float32)
+        variable = torch.tensor(data, dtype=torch.float32)
     if is_cuda:
-        v = v.cuda()
-    return v
-
-
-def set_trainable(model, requires_grad):
-    for param in model.parameters():
-        param.requires_grad = requires_grad
-
-
-def weights_normal_init(model, dev=0.01):
-    if isinstance(model, list):
-        for m in model:
-            weights_normal_init(m, dev)
-    else:
-        for m in model.modules():
-            if isinstance(m, nn.Conv2d):
-                m.weight.data.normal_(0.0, dev)
-                if m.bias is not None:
-                    m.bias.data.fill_(0.0)
-
-            elif isinstance(m, nn.Linear):
-                m.weight.data.normal_(0.0, dev)
+        variable = variable.cuda()
+    return variable

@@ -1,0 +1,2 @@
+[MESSAGES CONTROL]
+disable=not-callable,no-member,duplicate-code,no-name-in-module,too-many-locals
