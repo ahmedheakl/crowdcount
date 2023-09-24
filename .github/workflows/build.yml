@@ -2,7 +2,8 @@ name: build
 
 on:
   push:
-    branches: [ master ]
+    tags:
+      - 'v*.*.*'
 
 permissions:
   contents: read
@@ -25,8 +26,8 @@ jobs:
       
       - name: Linting
         run: |
-          pylint src/crowdcount
-          mypy src/crowdcount
+          pylint src/ezcrowdcount
+          mypy src/ezcrowdcount
 
       - name: Install build dependencies
         run: |
