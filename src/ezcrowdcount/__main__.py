@@ -4,11 +4,12 @@ import argparse
 
 import numpy as np
 import cv2
+import torch
 
-from crowdcount.crowd_count import CrowdCounter
-from crowdcount import network
-from crowdcount.utils import preprocess, generate_density_map, download_file
-from crowdcount import WEIGHTS_LINK
+from ezcrowdcount.crowd_count import CrowdCounter
+from ezcrowdcount import network
+from ezcrowdcount.utils import preprocess, generate_density_map, download_file
+from ezcrowdcount import WEIGHTS_LINK
 
 
 def predict(net: CrowdCounter, img: np.ndarray) -> Tuple[int, np.ndarray]:
@@ -21,10 +22,10 @@ def predict(net: CrowdCounter, img: np.ndarray) -> Tuple[int, np.ndarray]:
         Tuple[int, np.ndarray]: [Estimated count, Density Map]
     """
     im_data = preprocess(img)
-    density_map = net(im_data)
-    density_map = density_map.detach().numpy()
-    et_count = np.sum(density_map)
-    return et_count, density_map
+    density_map: torch.Tensor = net(im_data)
+    density_arr: np.ndarray = density_map.cpu().detach().numpy()
+    et_count = int(np.sum(density_arr))
+    return et_count, density_arr
 
 
 def predict_video(net, video_path: str) -> None:
@@ -39,7 +40,9 @@ def predict_video(net, video_path: str) -> None:
         raise ValueError("Video path is invalid")
 
     while True:
-        _, frame = cap.read()
+        ret, frame = cap.read()
+        if not ret:
+            break
         et_count, density_map = predict(net, frame)
         print(et_count)
         result_img = generate_density_map(density_map)
@@ -64,7 +67,7 @@ def predict_img(net: CrowdCounter, img_path: str) -> Tuple[int, np.ndarray]:
     img = cv2.imread(img_path)
     im_data = preprocess(img)
     density_map = net(im_data)
-    density_map = density_map.detach().numpy()
+    density_map = density_map.cpu().detach().numpy()
     et_count = np.sum(density_map)
     print(et_count)
     return et_count, density_map
@@ -88,17 +91,29 @@ def main() -> None:
         type=str,
         help="Path to video or Image",
     )
+    parser.add_argument(
+        "--device",
+        "-d",
+        default=None,
+        type=str,
+        help="Device to use for inference",
+    )
     args = parser.parse_args()
     if args.mode == "image" and args.path is None:
         raise ValueError("Image path must be set")
 
     if args.path is None:
         args.path = 0
+
+    if args.device is None:
+        args.device = "cuda" if torch.cuda.is_available() else "cpu"
+
     model_path = download_file(WEIGHTS_LINK, "cmtl_shtechB_768.h5")
-    print("PATH TO THE MODEL", model_path)
     net = CrowdCounter()
     network.load_net(model_path, net)
     net.eval()
+    net.to(device=args.device)
+
     if args.mode == "image":
         predict_img(net, args.path)
     else:

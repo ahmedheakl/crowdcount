@@ -3,8 +3,8 @@
 import torch
 from torch import nn
 
-from crowdcount import network
-from crowdcount.models import CMTL
+from ezcrowdcount import network
+from ezcrowdcount.models import CMTL
 
 
 class CrowdCounter(nn.Module):
@@ -22,7 +22,7 @@ class CrowdCounter(nn.Module):
 
     def forward(self, im_data, gt_data=None, gt_cls_label=None, ce_weights=None):
         """Forward pass of Crowd Counting Network"""
-        im_data = network.np_to_variable(im_data, is_cuda=False)
+        im_data = network.np_to_variable(im_data, is_cuda=torch.cuda.is_available())
         density_map, _ = self.CCN(im_data)
 
         return density_map

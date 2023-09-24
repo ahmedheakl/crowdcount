@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 from google_drive_downloader import GoogleDriveDownloader as gdd
 
-from crowdcount import IMG_SIZE
+from ezcrowdcount import IMG_SIZE
 
 
 def preprocess(img: np.ndarray) -> np.ndarray:
@@ -15,7 +15,7 @@ def preprocess(img: np.ndarray) -> np.ndarray:
         img (np.array): Input unprocessed image
 
     Returns:
-        np.array: Processed image
+        np.ndarray: Processed image
     """
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img = img.astype(np.float32, copy=False)

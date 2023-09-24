@@ -3,7 +3,7 @@ requires      = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "crowdcount"
+name = "ezcrowdcount"
 version = "1.0.0"
 description = "Easy to integrate Crowd Counting Library"
 readme = "README.md"
@@ -27,14 +27,14 @@ dependencies = {file = ["requirements.txt"]}
     dev   = ["black", "bumpver"]
 
     [project.scripts]
-    crowdcount = "crowdcount.__main__:main"
+    crowdcount = "ezcrowdcount.__main__:main"
 
     [project.urls]
     repository = "https://github.com/ahmedheakl/crowdcount"
 
 
 [tool.bumpver]
-current_version = "1.1.0"
+current_version = "1.0.0"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message  = "bump version {old_version} -> {new_version}"
 
@@ -43,6 +43,3 @@ commit_message  = "bump version {old_version} -> {new_version}"
         'current_version = "{version}"',
         'version = "{version}"',
     ]
-    "docs/source/conf.py" = ["release = '{version}'"]
-    "src/dronevis/__init__.py" = ["{version}"]
-    "src/dronevis/__main__.py" = ["- dronevis v{version}"]
