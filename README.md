@@ -28,3 +28,12 @@ The inference will run on your GPU (if available), and will be viewed right in f
 Also, the number of people during each frame will be printed on your console/terminal.
 
 # Demo
+**Input Image:**
+
+![Input Image](https://github.com/ahmedheakl/crowdcount/blob/master/imgs/sample.jpg?raw=true)
+
+**Result Image:**
+
+![Result Image](https://github.com/ahmedheakl/crowdcount/blob/master/imgs/sample-result.png?raw=true)
+
+#### Number of people: 165.8 🎉
